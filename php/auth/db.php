@@ -14,7 +14,3 @@ try {
     die("Database connection failed: " . $e->getMessage());
 }
 ?>
-host=
-port=
-database=
-user=
