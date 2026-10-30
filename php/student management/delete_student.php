@@ -23,6 +23,6 @@ if ($id > 0) {
     }
 }
 
-header("Location: /view_students.php");
+header("Location: view_students.php");
 exit();
 ?>
