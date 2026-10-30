@@ -12,7 +12,7 @@ $stmt->execute([$id]);
 $student = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$student) {
-    header("Location: view_students.php");
+    header("Location: /view_students.php");
     exit();
 }
 
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt = $pdo->prepare("UPDATE students SET name = ?, email = ?, phone = ?, address = ?, profile_picture = ? WHERE id = ?");
     $stmt->execute([$name, $email, $phone, $address, $profile_picture, $id]);
-    header("Location: view_students.php");
+    header("Location: /view_students.php");
     exit();
 }
 ?>
@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Update Student</button>
                     </form>
-                    <div class="text-center mt-3"><a href="view_students.php">Cancel</a></div>
+                    <div class="text-center mt-3"><a href="/view_students.php">Cancel</a></div>
                 </div>
             </div>
         </div>

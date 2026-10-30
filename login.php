@@ -54,7 +54,7 @@ session_start();
 <?php
 // Handle form submission logic in the same file
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login_identifier'])) {
-    require_once 'php/auth/db.php';
+    require_once '/php/auth/db.php';
     
     $identifier = trim($_POST['login_identifier']);
     $password = $_POST['password'];
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login_identifier'])) {
         exit();
     } else {
         $_SESSION['error'] = "Invalid username/email or password.";
-        header("Location: login.php");
+        header("Location: /login.php");
         exit();
     }
 }

@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!empty($name) && !empty($email)) {
         $stmt = $pdo->prepare("INSERT INTO students (name, email, phone, address, profile_picture) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$name, $email, $phone, $address, $profile_picture]);
-        header("Location: view_students.php");
+        header("Location: /view_students.php");
         exit();
     } else {
         $message = "Name and Email are required fields.";
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Add Student</button>
                     </form>
-                    <div class="text-center mt-3"><a href="view_students.php">Back to Student List</a></div>
+                    <div class="text-center mt-3"><a href="/view_students.php">Back to Student List</a></div>
                 </div>
             </div>
         </div>

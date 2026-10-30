@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             if ($insert_stmt->execute([$username, $email, $hashed_password])) {
                 $_SESSION['success'] = "Registration successful! You can now log in.";
-                header("Location: login.php");
+                header("Location: /login.php");
                 exit();
             } else {
                 $errors[] = "An error occurred during registration. Please try again.";

@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($password !== $confirm_password) {
         $_SESSION['error'] = "Passwords do not match.";
-        header("Location: ./register.html");
+        header("Location: ../../register.php");
         exit();
     }
 
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
         $stmt->execute([$username, $email, $hashed_password]);
         $_SESSION['success'] = "Registration successful! Please login.";
-        header("Location: ./login.html");
+        header("Location: ../../login.php");
         exit();
     } catch (PDOException $e) {
         $_SESSION['error'] = "Username or email already exists.";

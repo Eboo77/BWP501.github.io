@@ -49,7 +49,7 @@ $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Student Records</h2>
             <div>
-                <a href="add_student.php" class="btn btn-success">Add New Student</a>
+                <a href="/add_student.php" class="btn btn-success">Add New Student</a>
                 <a href="../auth/logout.php" class="btn btn-outline-danger">Logout</a>
             </div>
         </div>
