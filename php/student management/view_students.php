@@ -4,7 +4,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: ../../login.php");
     exit();
 }
-require_once __DIR__ . '../auth/db.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/auth/db.php';
 
 // Pagination setup
 $limit = 10;
