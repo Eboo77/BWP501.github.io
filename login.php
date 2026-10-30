@@ -54,7 +54,7 @@ session_start();
 <?php
 // Handle form submission logic in the same file
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login_identifier'])) {
-    require_once '/php/auth/db.php';
+    require_once __DIR__ . '/php/auth/db.php';
     
     $identifier = trim($_POST['login_identifier']);
     $password = $_POST['password'];
