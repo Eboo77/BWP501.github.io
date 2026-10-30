@@ -1,10 +1,10 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../login.php");
+    header("Location: /../../login.php");
     exit();
 }
-require_once __DIR__ . '../auth/db.php';
+require_once __DIR__ . '/../auth/db.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
