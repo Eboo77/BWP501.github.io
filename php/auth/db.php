@@ -1,13 +1,12 @@
 <?php
-$host = 'aws-0-eu-north-1.pooler.supabase.com';      // e.g., from your cloud provider dashboard
+$host = 'aws-0-eu-north-1.pooler.supabase.com';
 $dbname = 'postgres';
 $username = 'postgres.rtcmhbxpnufxbhlohmgo';
-$password = '1beMXFoOYFUiGgwy';
-$port = '6543';                    // Standard PostgreSQL port
+$password = '1beMXFOoYFUjGgwy';
+$port = '6543'; // Try '5432' if '6543' fails
 
 try {
-    // Notice it starts with 'pgsql:' instead of 'mysql:' for cloud PostgreSQL
-    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
     $pdo = new PDO($dsn, $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
