@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.html");
+    header("Location: ../../login.php");
     exit();
 }
 require_once '../auth/db.php';
@@ -50,7 +50,7 @@ $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <h2>Student Records</h2>
             <div>
                 <a href="add_student.php" class="btn btn-success">Add New Student</a>
-                <a href="logout.php" class="btn btn-outline-danger">Logout</a>
+                <a href="../auth/logout.php" class="btn btn-outline-danger">Logout</a>
             </div>
         </div>
 

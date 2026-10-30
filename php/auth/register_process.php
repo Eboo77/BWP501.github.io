@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     } catch (PDOException $e) {
         $_SESSION['error'] = "Username or email already exists.";
-        header("Location: ./registration.html");
+        header("Location: ../../registration.php");
         exit();
     }
 }

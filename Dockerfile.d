@@ -1,4 +1,4 @@
-FROMPHP:8.3-APACHE
+FROM php:8.3-APACHE
 
 RUN docher-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-enaple mysqli pdo_mysql
 
