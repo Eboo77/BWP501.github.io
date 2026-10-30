@@ -5,7 +5,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once '../auth/db.php';
+require_once __DIR__ . '../auth/db.php';
 
 $message = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
