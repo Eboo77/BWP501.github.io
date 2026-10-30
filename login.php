@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login_identifier'])) {
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
-        header("Location: php/student management/view_students.php");
+        header("Location: /php/student management/view_students.php");
         exit();
     } else {
         $_SESSION['error'] = "Invalid username/email or password.";
