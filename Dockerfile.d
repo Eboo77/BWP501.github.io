@@ -1,6 +1,8 @@
 FROM php:8.3-apache
 
-RUN docker-php-ext-install pgsqli pdo pdo_pgsql && docker-php-ext-enable pgsqli pdo_pgsql
+RUN apt-get update && apt-get install -y libpq-dev
+
+RUN docker-php-ext-install pgsql pdo_pgsql && docker-php-ext-enable pgsql pdo_pgsql
 
 RUN a2enmod rewrite
 
