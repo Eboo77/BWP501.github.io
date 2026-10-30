@@ -1,8 +1,8 @@
-FROM php:8.3-APACHE
+FROM php:8.3-apache
 
-RUN docher-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-enaple mysqli pdo_mysql
+RUN docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-enable mysqli pdo_mysql
 
-RUN a2enomd rewrite
+RUN a2enmod rewrite
 
 COPY . /var/www/html/
 
