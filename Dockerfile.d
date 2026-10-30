@@ -1,6 +1,6 @@
 FROM php:8.3-apache
 
-RUN docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-enable mysqli pdo_mysql
+RUN docker-php-ext-install pgsqli pdo pdo_pgsql && docker-php-ext-enable pgsqli pdo_pgsql
 
 RUN a2enmod rewrite
 
