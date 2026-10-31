@@ -11,54 +11,55 @@ require_once 'vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-
 $message = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
     $address = trim($_POST['address']);
-    $profile_picture = null;
+    $profile_picture_url = null; // تم تصحيح اسم المتغير
 
-    // Handle File Upload
-    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-    $fileTmpPath = $_FILES['photo']['tmp_name'];
-    $fileName = time() . '_' . preg_replace("/[^a-zA-Z0-9._-]/", "", $_FILES['photo']['name']);
-    
-    // Supabase Configuration
-    $supabaseUrl = $_ENV['SUPABASE_URL'] ?? null; // actual Supabase project URL base
-    $supabaseServiceKey = $_ENV['SUPABASE_KEY'] ?? null; // Supabase API key
-    $bucketName = "uplaods"; // Your exact bucket name
+    // Handle File Upload (تم تصحيح 'photo' إلى 'profile_picture' لتطابق الـ HTML)
+    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+        $fileTmpPath = $_FILES['profile_picture']['tmp_name'];
+        $fileName = time() . '_' . preg_replace("/[^a-zA-Z0-9._-]/", "", $_FILES['profile_picture']['name']);
+        
+        // Supabase Configuration
+        $supabaseUrl = $_ENV['SUPABASE_URL'] ?? null; 
+        $supabaseServiceKey = $_ENV['SUPABASE_KEY'] ?? null; 
+        $bucketName = "uplaods"; 
 
-    $url = "$supabaseUrl/storage/v1/object/$bucketName/$fileName";
+        $url = "$supabaseUrl/storage/v1/object/$bucketName/$fileName";
 
-    // Read file data
-    $fileData = file_get_contents($fileTmpPath);
+        // Read file data
+        $fileData = file_get_contents($fileTmpPath);
 
-    // Send file to Supabase Storage via cURL
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $fileData);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: Bearer $supabaseServiceKey",
-        "Content-Type: " . $_FILES['photo']['type'],
-        "x-upsert: true"
-    ]);
+        // Send file to Supabase Storage via cURL
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fileData);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30); // تحديد مهلة زمنية 30 ثانية لمنع تعليق الصفحة
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: Bearer $supabaseServiceKey",
+            "Content-Type: " . $_FILES['profile_picture']['type'],
+            "x-upsert: true"
+        ]);
 
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-    if ($httpCode === 200 || $httpCode === 201) {
-        // Generate the public URL to save in your PostgreSQL database
-        $profile_picture_url = "$supabaseUrl/storage/v1/object/public/$bucketName/$fileName";
+        if ($httpCode === 200 || $httpCode === 201) {
+            // توليد الرابط العام وحفظه في المتغير الصحيح
+            $profile_picture_url = "$supabaseUrl/storage/v1/object/public/$bucketName/$fileName";
+        }
     }
-}
 
     if (!empty($name) && !empty($email)) {
+        // إدخال المتغير الصحيح $profile_picture_url بدلاً من القيمة الفارغة
         $stmt = $pdo->prepare("INSERT INTO students (name, email, phone, address, profile_picture) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$name, $email, $phone, $address, $profile_picture]);
+        $stmt->execute([$name, $email, $phone, $address, $profile_picture_url]);
         header("Location: view_students.php");
         exit();
     } else {
@@ -111,7 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 
-    <!-- AJAX Real-time Validation Script -->
     <script>
         document.getElementById('studentForm').addEventListener('submit', function(e) {
             const name = document.getElementById('name').value.trim();
