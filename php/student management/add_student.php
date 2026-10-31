@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     // Supabase Configuration
     $supabaseUrl = "https://rtcmhbxpnufxbhlohmgo.supabase.co"; // Replace with your actual Supabase project URL base (e.g. https://xyz.supabase.co)
-    $supabaseServiceKey = "YOUR_SUPABASE_SERVICE_OR_ANON_KEY"; // Your Supabase API key
+    $supabaseServiceKey = "https://rtcmhbxpnufxbhlohmgo.supabase.co"; // Your Supabase API key
     $bucketName = "uplaods"; // Your exact bucket name
 
     $url = "$supabaseUrl/storage/v1/object/$bucketName/$fileName";
