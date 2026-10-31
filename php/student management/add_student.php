@@ -8,11 +8,9 @@ if (!isset($_SESSION['user_id'])) {
 require_once __DIR__ . '/../auth/db.php';
 require_once 'vendor/autoload.php';
 
-// تحميل متغيرات البيئة من ملف .env
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-// استدعاء القيم المخزنة في ملف .env
 
 $message = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -28,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $fileName = time() . '_' . preg_replace("/[^a-zA-Z0-9._-]/", "", $_FILES['photo']['name']);
     
     // Supabase Configuration
-    $supabaseUrl = $_ENV['SUPABASE_URL'] ?? null; // Replace with your actual Supabase project URL base (e.g. https://xyz.supabase.co)
-    $supabaseServiceKey = $_ENV['SUPABASE_KEY'] ?? null; // Your Supabase API key
+    $supabaseUrl = $_ENV['SUPABASE_URL'] ?? null; // actual Supabase project URL base
+    $supabaseServiceKey = $_ENV['SUPABASE_KEY'] ?? null; // Supabase API key
     $bucketName = "uplaods"; // Your exact bucket name
 
     $url = "$supabaseUrl/storage/v1/object/$bucketName/$fileName";
