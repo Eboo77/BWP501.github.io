@@ -16,22 +16,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $profile_picture = null;
 
     // Handle File Upload
-    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
-        $target_dir = "uploads/";
-        if (!is_dir($target_dir)) {
-            mkdir($target_dir, 0755, true);
-        }
-        $file_extension = pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION);
-        $file_name = uniqid() . '.' . $file_extension;
-        $target_file = $target_dir . $file_name;
+    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+    $fileTmpPath = $_FILES['photo']['tmp_name'];
+    $fileName = time() . '_' . preg_replace("/[^a-zA-Z0-9._-]/", "", $_FILES['photo']['name']);
+    
+    // Supabase Configuration
+    $supabaseUrl = "https://rtcmhbxpnufxbhlohmgo.supabase.co"; // Replace with your actual Supabase project URL base (e.g. https://xyz.supabase.co)
+    $supabaseServiceKey = "YOUR_SUPABASE_SERVICE_OR_ANON_KEY"; // Your Supabase API key
+    $bucketName = "uplaods"; // Your exact bucket name
 
-        $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
-        if (in_array(strtolower($file_extension), $allowed_types)) {
-            if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target_file)) {
-                $profile_picture = $target_file;
-            }
-        }
+    $url = "$supabaseUrl/storage/v1/object/$bucketName/$fileName";
+
+    // Read file data
+    $fileData = file_get_contents($fileTmpPath);
+
+    // Send file to Supabase Storage via cURL
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fileData);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer $supabaseServiceKey",
+        "Content-Type: " . $_FILES['photo']['type'],
+        "x-upsert: true"
+    ]);
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode === 200 || $httpCode === 201) {
+        // Generate the public URL to save in your PostgreSQL database
+        $profile_picture_url = "$supabaseUrl/storage/v1/object/public/$bucketName/$fileName";
     }
+}
 
     if (!empty($name) && !empty($email)) {
         $stmt = $pdo->prepare("INSERT INTO students (name, email, phone, address, profile_picture) VALUES (?, ?, ?, ?, ?)");
