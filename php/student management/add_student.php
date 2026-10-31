@@ -48,11 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
         curl_close($ch);
 
-        if ($httpCode === 200 || $httpCode === 201) {
-            // توليد الرابط العام وحفظه في المتغير الصحيح
-            $profile_picture_url = "$supabaseUrl/storage/v1/object/public/$bucketName/$fileName";
+        // إذا فشل الرفع، أطبع الخطأ وتوقف لمعرفة السبب
+        if ($httpCode !== 200 && $httpCode !== 201) {
+            echo "Curl Error: " . $curlError . "<br>";
+            echo "HTTP Code: " . $httpCode . "<br>";
+            echo "Supabase Response: " . $response;
+            exit();
         }
     }
 
