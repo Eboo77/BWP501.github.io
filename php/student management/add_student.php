@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Supabase Configuration
         $supabaseUrl = $_ENV['SUPABASE_URL'] ?? null; 
         $supabaseServiceKey = $_ENV['SUPABASE_KEY'] ?? null; 
-        $bucketName = "uplaods"; 
+        $bucketName = "uploads"; 
 
         $url = "$supabaseUrl/storage/v1/object/$bucketName/$fileName";
 
