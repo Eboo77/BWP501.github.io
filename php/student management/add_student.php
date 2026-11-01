@@ -7,9 +7,12 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once __DIR__ . '/../auth/db.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
-$dotenv->load();
 
+// Load .env only if it exists locally; on Render, environment variables are set via dashboard
+if (file_exists(__DIR__ . '/../../.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+    $dotenv->load();
+}
 $message = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = trim($_POST['name']);
