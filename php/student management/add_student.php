@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $profile_picture_url = null;
 
     // ضع مفتاح الـ Anon Key الخاص بـ Supabase هنا أو استدعِه من متغيرات البيئة
-    $supabase_anon_key = $_ENV['SUPABASE_ANON_KEY'] ?? '';
+    $supabase_key = $_ENV['SUPABASE_KEY'] ?? '';
 
     // التحقق من الحقول الإجبارية
     if (empty($name) || empty($email)) {
@@ -56,8 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 
             $headers = [
-                "apikey: " . $supabase_anon_key,
-                "Authorization: Bearer " . $supabase_anon_key,
+                "apikey: " . $supabase_key,
+                "Authorization: Bearer " . $supabase_key,
                 "Content-Type: " . $fileType,
                 "x-upsert: true"
             ];
