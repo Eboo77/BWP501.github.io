@@ -53,12 +53,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $curlError = curl_error($ch);
         curl_close($ch);
 
-        // إذا فشل الرفع، أطبع الخطأ وتوقف لمعرفة السبب
         if ($httpCode !== 200 && $httpCode !== 201) {
-            echo "Curl Error: " . $curlError . "<br>";
-            echo "HTTP Code: " . $httpCode . "<br>";
-            echo "Supabase Response: " . $response;
-            exit();
+         echo "cURL Error: " . $curlError . "<br>";
+         echo "HTTP Code: " . $httpCode . "<br>";
+            echo "Supabase Response: " . htmlspecialchars($response);
+         exit();
         }
     }
 
