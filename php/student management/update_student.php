@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fileData = file_get_contents($tmpFilePath);
         $fileType = $_FILES['profile_picture']['type'];
 
-        $url = "https://rtcmhbxpnufxhblohngo.supabase.co/storage/v1/object/" . $bucketName . "/avatars/" . $fileName;
+        $url = "https://rtcmhbxpnufxbhlohmgo.supabase.co/storage/v1/object/" . $bucketName . "/avatars/" . $fileName;
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
