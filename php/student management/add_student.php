@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM students WHERE email = ? OR name = ? OR phone = ?");
         $checkStmt->execute([$email, $name, $phone]);
         if ($checkStmt->fetchColumn() > 0) {
-            $message = "A student with this name or email or picture already exists!";
+            $message = "A student with this name or email or phone already exists!";
         } else {
             // Processing the image upload, if present
             if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
