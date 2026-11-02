@@ -4,7 +4,7 @@ $dbname = 'postgres';
 $username = 'postgres.rtcmhbxpnufxbhlohmgo';
 $password = 'oldiXzpbdx1yr8jh';
 $port = '6543'; 
-
+// Verifying the database connection
 try {
     $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
     $pdo = new PDO($dsn, $username, $password);

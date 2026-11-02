@@ -9,7 +9,7 @@ require_once __DIR__ . '/../auth/db.php';
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id > 0) {
-    // 1. جلب معلومات الطالب للحصول على رابط الصورة قبل الحذف
+    // 1. Retrieve student information to obtain the image link before deletion
     $stmt = $pdo->prepare("SELECT profile_picture FROM students WHERE id = ?");
     $stmt->execute([$id]);
     $student = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -17,22 +17,22 @@ if ($id > 0) {
     if ($student) {
         $profile_picture_url = $student['profile_picture'];
 
-        // 2. إذا كانت هناك صورة مخزنة في Supabase، نقوم بحذفها
+        // 2. If an image is stored in Supabase, we delete it.
         if (!empty($profile_picture_url)) {
-            // استخراج اسم الملف الأخير من الرابط (مثلاً: 1712345678_image.jpg)
+            // Extracting the final filename from a URL
             $fileName = basename($profile_picture_url);
             
             $bucketName = 'uploads';
-            // رابط الـ API الخاص بالحذف في Supabase Storage
+            // API endpoint for deletion in Supabase Storage
             $url = "https://rtcmhbxpnufxbhlohmgo.supabase.co/storage/v1/object/" . $bucketName . "/avatars/" . $fileName;
 
-            // مفتاح الـ service_role السري لتجاوز قيود الحذف
+            // The secret key to bypassing deletion restrictions
             $supabase_key = $_ENV['SUPABASE_KEY'];
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); // استخدام طلب DELETE
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); // use command DELETE
             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 
@@ -46,13 +46,13 @@ if ($id > 0) {
             curl_close($ch);
         }
 
-        // 3. حذف سجل الطالب من قاعدة البيانات
+        // 3. Delete the student record from the database
         $deleteStmt = $pdo->prepare("DELETE FROM students WHERE id = ?");
         $deleteStmt->execute([$id]);
     }
 }
 
-// العودة إلى صفحة عرض الطلاب بعد الانتهاء
+// Return to the student view page upon completion
 header("Location: view_students.php");
 exit();
 ?>

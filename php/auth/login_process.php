@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . 'db.php';
-
+// Verifying that the information matches the database
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $identifier = trim($_POST['login_identifier']);
     $password = $_POST['password'];

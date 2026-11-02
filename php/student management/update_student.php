@@ -26,76 +26,80 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
     $address = trim($_POST['address']);
-    $profile_picture_url = $student['profile_picture']; // الاحتفاظ بالرابط القديم مبدئياً
-
-    //  مفتاح الـ service_role السري الخاص بـ Supabase هنا لتجاوز قيود RLS
+    $profile_picture_url = $student['profile_picture']; // Keep the old link 
+    //  The Supabase secret key is used here to bypass RLS restrictions.
     $supabase_key = $_ENV['SUPABASE_KEY'];
-    $bucketName = 'uploads'; // اسم الـ Bucket في Supabase
-
-    // التحقق من رفع صورة جديدة
-    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
-        $tmpFilePath = $_FILES['profile_picture']['tmp_name'];
-        $fileName = time() . '_' . basename($_FILES['profile_picture']['name']);
-        $fileData = file_get_contents($tmpFilePath);
-        $fileType = $_FILES['profile_picture']['type'];
-
-        $url = "https://rtcmhbxpnufxbhlohmgo.supabase.co/storage/v1/object/" . $bucketName . "/avatars/" . $fileName;
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fileData);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-
-        $headers = [
-            "apikey: " . $supabase_key,
-            "Authorization: Bearer " . $supabase_key,
-            "Content-Type: " . $fileType,
-            "x-upsert: true"
-        ];
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        if (curl_errno($ch)) {
-            $message = "CURL Error: " . curl_error($ch);
-            curl_close($ch);
+    $bucketName = 'uploads'; // Bucket name in Supabase
+     $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM students WHERE email = ? OR name = ? OR phone = ? OR profile_picture = ?");
+        $checkStmt->execute([$email, $name, $phone, $profile_picture_url]);
+        if ($checkStmt->fetchColumn() > 0) {
+            $message = "A student with this name or email or picture or phone already exists!";
         } else {
-            curl_close($ch);
-            if ($httpCode === 200 || $httpCode === 201) {
-               // 1. تم رفع الصورة الجديدة بنجاح، لنقُم بحذف الصورة القديمة من السحابة إن وجدت
-                if (!empty($student['profile_picture'])) {
-                    $oldFileName = basename($student['profile_picture']);
-                    $deleteUrl = "https://rtcmhbxpnufxbhlohmgo.supabase.co/storage/v1/object/" . $bucketName . "/avatars/" . $oldFileName;
+        // Verifying the upload of a new image
+        if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+            $tmpFilePath = $_FILES['profile_picture']['tmp_name'];
+            $fileName = time() . '_' . basename($_FILES['profile_picture']['name']);
+            $fileData = file_get_contents($tmpFilePath);
+            $fileType = $_FILES['profile_picture']['type'];
 
-                    $chDel = curl_init();
-                    curl_setopt($chDel, CURLOPT_URL, $deleteUrl);
-                    curl_setopt($chDel, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($chDel, CURLOPT_CUSTOMREQUEST, 'DELETE');
-                    curl_setopt($chDel, CURLOPT_TIMEOUT, 30);
-                    curl_setopt($chDel, CURLOPT_CONNECTTIMEOUT, 10);
-                    curl_setopt($chDel, CURLOPT_HTTPHEADER, [
-                        "apikey: " . $supabase_key,
-                        "Authorization: Bearer " . $supabase_key
-                    ]);
-                    
-                    curl_exec($chDel);
-                    curl_close($chDel);
-                }
+            $url = "https://rtcmhbxpnufxbhlohmgo.supabase.co/storage/v1/object/" . $bucketName . "/avatars/" . $fileName;
 
-                // 2. تحديث الرابط الجديد للصورة
-                $profile_picture_url = "https://rtcmhbxpnufxbhlohmgo.supabase.co/storage/v1/object/public/" . $bucketName . "/avatars/" . $fileName;
-            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $fileData);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+
+            $headers = [
+                "apikey: " . $supabase_key,
+                "Authorization: Bearer " . $supabase_key,
+                "Content-Type: " . $fileType,
+                "x-upsert: true"
+            ];
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            if (curl_errno($ch)) {
+                $message = "CURL Error: " . curl_error($ch);
+                curl_close($ch);
             } else {
-                $message = "HTTP Code: " . $httpCode . " - Response: " . $response;
+                curl_close($ch);
+                if ($httpCode === 200 || $httpCode === 201) {
+                // 1. Upload the new image and delete the old one
+                    if (!empty($student['profile_picture'])) {
+                        $oldFileName = basename($student['profile_picture']);
+                        $deleteUrl = "https://rtcmhbxpnufxbhlohmgo.supabase.co/storage/v1/object/" . $bucketName . "/avatars/" . $oldFileName;
+
+                        $chDel = curl_init();
+                        curl_setopt($chDel, CURLOPT_URL, $deleteUrl);
+                        curl_setopt($chDel, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($chDel, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                        curl_setopt($chDel, CURLOPT_TIMEOUT, 30);
+                        curl_setopt($chDel, CURLOPT_CONNECTTIMEOUT, 10);
+                        curl_setopt($chDel, CURLOPT_HTTPHEADER, [
+                            "apikey: " . $supabase_key,
+                            "Authorization: Bearer " . $supabase_key
+                        ]);
+                        
+                        curl_exec($chDel);
+                        curl_close($chDel);
+                    }
+
+                    // 2. Update the new link for the image
+                    $profile_picture_url = "https://rtcmhbxpnufxbhlohmgo.supabase.co/storage/v1/object/public/" . $bucketName . "/avatars/" . $fileName;
+                
+                } else {
+                    $message = "HTTP Code: " . $httpCode . " - Response: " . $response;
+                }
             }
         }
     }
 
-    // تحديث البيانات في قاعدة البيانات
+    // Updating data in the database
     if (empty($message)) {
         $stmt = $pdo->prepare("UPDATE students SET name = ?, email = ?, phone = ?, address = ?, profile_picture = ? WHERE id = ?");
         $stmt->execute([$name, $email, $phone, $address, $profile_picture_url, $id]);
