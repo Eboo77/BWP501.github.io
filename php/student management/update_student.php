@@ -66,15 +66,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             curl_close($ch);
             if ($httpCode === 200 || $httpCode === 201) {
-                // الحصول على الرابط العام الجديد للصورة في Supabase
-                $profile_picture_url = "https://rtcmhbxpnufxbhlohmgo.supabase.co/storage/v1/object/public/" . $bucketName . "/avatars/" . $fileName;
+               // 1. تم رفع الصورة الجديدة بنجاح، لنقُم بحذف الصورة القديمة من السحابة إن وجدت
+                if (!empty($student['profile_picture'])) {
+                    $oldFileName = basename($student['profile_picture']);
+                    $deleteUrl = "https://rtcmhbxpnufxhbhlohngo.supabase.co/storage/v1/object/" . $bucketName . "/avatars/" . $oldFileName;
+
+                    $chDel = curl_init();
+                    curl_setopt($chDel, CURLOPT_URL, $deleteUrl);
+                    curl_setopt($chDel, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($chDel, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                    curl_setopt($chDel, CURLOPT_TIMEOUT, 30);
+                    curl_setopt($chDel, CURLOPT_CONNECTTIMEOUT, 10);
+                    curl_setopt($chDel, CURLOPT_HTTPHEADER, [
+                        "apikey: " . $supabase_key,
+                        "Authorization: Bearer " . $supabase_key
+                    ]);
+                    
+                    curl_exec($chDel);
+                    curl_close($chDel);
+                }
+
+                // 2. تحديث الرابط الجديد للصورة
+                $profile_picture_url = "https://rtcmhbxpnufxhbhlohngo.supabase.co/storage/v1/object/public/" . $bucketName . "/avatars/" . $fileName;
+            
             } else {
                 $message = "HTTP Code: " . $httpCode . " - Response: " . $response;
             }
         }
     }
 
-    // تحديث البيانات في قاعدة البيانات إذا لم يحدث خطأ في الرفع
+    // تحديث البيانات في قاعدة البيانات
     if (empty($message)) {
         $stmt = $pdo->prepare("UPDATE students SET name = ?, email = ?, phone = ?, address = ?, profile_picture = ? WHERE id = ?");
         $stmt->execute([$name, $email, $phone, $address, $profile_picture_url, $id]);
