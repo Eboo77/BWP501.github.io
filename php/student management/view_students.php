@@ -82,8 +82,8 @@ $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <?php foreach ($students as $student): ?>
                                 <tr>
                                     <td>
-                                        <?php if ($student['profile_picture'] && file_exists($student['profile_picture'])): ?>
-                                            <img src="<?= $student['profile_picture'] ?>" alt="Profile" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
+                                        <?php if (!empty($student['profile_picture'])): ?>
+                                            <img src="<?= htmlspecialchars($student['profile_picture']) ?>" alt="Profile" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
                                         <?php else: ?>
                                             <span class="badge bg-secondary">N/A</span>
                                         <?php endif; ?>

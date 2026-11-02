@@ -28,8 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $address = trim($_POST['address']);
     $profile_picture_url = $student['profile_picture']; // الاحتفاظ بالرابط القديم مبدئياً
 
-    // ضع مفتاح الـ service_role السري الخاص بـ Supabase هنا لتجاوز قيود RLS
-    $supabase_service_role_key = $_ENV['SUPABASE_KEY'];
+    //  مفتاح الـ service_role السري الخاص بـ Supabase هنا لتجاوز قيود RLS
+    $supabase_key = $_ENV['SUPABASE_KEY'];
     $bucketName = 'uploads'; // اسم الـ Bucket في Supabase
 
     // التحقق من رفع صورة جديدة
@@ -50,8 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 
         $headers = [
-            "apikey: " . $supabase_service_role_key,
-            "Authorization: Bearer " . $supabase_service_role_key,
+            "apikey: " . $supabase_key,
+            "Authorization: Bearer " . $supabase_key,
             "Content-Type: " . $fileType,
             "x-upsert: true"
         ];
