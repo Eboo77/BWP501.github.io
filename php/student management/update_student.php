@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                // 1. تم رفع الصورة الجديدة بنجاح، لنقُم بحذف الصورة القديمة من السحابة إن وجدت
                 if (!empty($student['profile_picture'])) {
                     $oldFileName = basename($student['profile_picture']);
-                    $deleteUrl = "https://rtcmhbxpnufxhbhlohngo.supabase.co/storage/v1/object/" . $bucketName . "/avatars/" . $oldFileName;
+                    $deleteUrl = "https://rtcmhbxpnufxbhlohmgo.supabase.co/storage/v1/object/" . $bucketName . "/avatars/" . $oldFileName;
 
                     $chDel = curl_init();
                     curl_setopt($chDel, CURLOPT_URL, $deleteUrl);
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
                 // 2. تحديث الرابط الجديد للصورة
-                $profile_picture_url = "https://rtcmhbxpnufxhbhlohngo.supabase.co/storage/v1/object/public/" . $bucketName . "/avatars/" . $fileName;
+                $profile_picture_url = "https://rtcmhbxpnufxbhlohmgo.supabase.co/storage/v1/object/public/" . $bucketName . "/avatars/" . $fileName;
             
             } else {
                 $message = "HTTP Code: " . $httpCode . " - Response: " . $response;
