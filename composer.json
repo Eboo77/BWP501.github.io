@@ -1,0 +1,20 @@
+{
+    "name": "eboo77/bwp501",
+    "description": "bwp501 hw",
+    "type": "project",
+    "require": {
+        "vlucas/phpdotenv": "^5.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Eboo77\\Bwp501\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Eboo12",
+            "email": "ebaahabeb4@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
