@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login_identifier'])) {
         header("Location: /php/student management/view_students.php");
         exit();
     } else {
-        $_SESSION['error'] = " اسم مستخدم/بريد الكتروني او كلمة مرور غير صالح.";
+        $_SESSION['error'] = " اسم مستخدم/بريد الكتروني او كلمة مرور غير صحيحة.";
         header("Location: /login.php");
         exit();
     }
