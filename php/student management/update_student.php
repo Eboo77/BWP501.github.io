@@ -26,14 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
     $address = trim($_POST['address']);
-    $profile_picture_url = $student['profile_picture']; // Keep the old link 
+    $profile_picture_url = $student['profile_picture']; 
     //  The Supabase secret key is used here to bypass RLS restrictions.
     $supabase_key = $_ENV['SUPABASE_KEY'];
     $bucketName = 'uploads'; // Bucket name in Supabase
      $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM students WHERE email = ? OR name = ? OR phone = ? OR profile_picture = ?");
         $checkStmt->execute([$email, $name, $phone, $profile_picture_url]);
         if ($checkStmt->fetchColumn() > 0) {
-            $message = "A student with this name or email or picture or phone already exists!";
+            $message = "هناك طالب بالفعل مع نفس الاسم او البريد الالكتروني او رقم الهاتف. جرب مرة اخرى!";
         } else {
         // Verifying the upload of a new image
         if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Update Student</title>
+    <title>تعديل معلومات الطالب</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 p-4">
-                    <h3 class="mb-3 text-center">Update Student</h3>
+                    <h3 class="mb-3 text-center">تعديل معلومات الطالب</h3>
                     
                     <?php if (!empty($message)): ?>
                         <div class="alert alert-danger"><?= htmlspecialchars($message) ?></div>
@@ -129,33 +129,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     <form action="update_student.php?id=<?= $student['id'] ?>" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <label class="form-label">Full Name</label>
+                            <label class="form-label">الاسم الكامل </label>
                             <input type="text" class="form-control" name="name" value="<?= htmlspecialchars($student['name']) ?>" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Email Address</label>
+                            <label class="form-label">البريد الالكتروني</label>
                             <input type="email" class="form-control" name="email" value="<?= htmlspecialchars($student['email']) ?>" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Phone Number</label>
+                            <label class="form-label">رقم الهاتف</label>
                             <input type="text" class="form-control" name="phone" value="<?= htmlspecialchars($student['phone']) ?>">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Address</label>
+                            <label class="form-label">العنوان</label>
                             <textarea class="form-control" name="address" rows="2"><?= htmlspecialchars($student['address']) ?></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Current Profile Picture</label><br>
+                            <label class="form-label">الصورة الشخصية الحالية</label><br>
                             <?php if (!empty($student['profile_picture'])): ?>
                                 <img src="<?= htmlspecialchars($student['profile_picture']) ?>" class="rounded mb-2" width="60" height="60" style="object-fit: cover;">
                             <?php else: ?>
-                                <p class="text-muted small">No picture uploaded.</p>
+                                <p class="text-muted small">لا توجد صورة محملة.</p>
                             <?php endif; ?>
                             <input type="file" class="form-control mt-1" name="profile_picture" accept="image/*">
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Update Student</button>
+                        <button type="submit" class="btn btn-primary w-100">تعديل المعلومات</button>
                     </form>
-                    <div class="text-center mt-3"><a href="view_students.php">Cancel</a></div>
+                    <div class="text-center mt-3"><a href="view_students.php">الغاء</a></div>
                 </div>
             </div>
         </div>
