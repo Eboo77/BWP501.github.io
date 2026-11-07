@@ -41,25 +41,25 @@ $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>View Students</title>
+    <title>سجلات الطلاب</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
     <div class="container my-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Student Records</h2>
+            <h2>سجلات الطلاب</h2>
             <div>
-                <a href="add_student.php" class="btn btn-success">Add New Student</a>
-                <a href="/php/auth/logout.php" class="btn btn-outline-danger">Logout</a>
+                <a href="add_student.php" class="btn btn-success">اضف طالب جديد</a>
+                <a href="/php/auth/logout.php" class="btn btn-outline-danger">تسجبل الخروج</a>
             </div>
         </div>
 
         <!-- Search Form -->
         <form method="GET" action="view_students.php" class="input-group mb-4">
-            <input type="text" name="search" class="form-control" placeholder="Search by name, email, or phone..." value="<?= htmlspecialchars($search) ?>">
-            <button class="btn btn-primary" type="submit">Search</button>
+            <input type="text" name="search" class="form-control" placeholder="ابحث باستخدام الاسم او البريد الالكتروني او رقم الهاتف ..." value="<?= htmlspecialchars($search) ?>">
+            <button class="btn btn-primary" type="submit">بحث</button>
             <?php if($search): ?>
-                <a href="view_students.php" class="btn btn-outline-secondary">Reset</a>
+                <a href="view_students.php" class="btn btn-outline-secondary">اعادة ضبط</a>
             <?php endif; ?>
         </form>
 
@@ -69,12 +69,12 @@ $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <table class="table table-striped table-hover mb-0 align-middle">
                     <thead class="table-dark">
                         <tr>
-                            <th>Picture</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Address</th>
-                            <th>Actions</th>
+                            <th>الصورة</th>
+                            <th>الاسم</th>
+                            <th>البريد الالكتروني</th>
+                            <th>رقم العاتف</th>
+                            <th>العنوان</th>
+                            <th>الاجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,7 +85,7 @@ $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <?php if (!empty($student['profile_picture'])): ?>
                                             <img src="<?= htmlspecialchars($student['profile_picture']) ?>" alt="Profile" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
                                         <?php else: ?>
-                                            <span class="badge bg-secondary">N/A</span>
+                                            <span class="badge bg-secondary">لا يوجد</span>
                                         <?php endif; ?>
                                     </td>
                                     <td><?= htmlspecialchars($student['name']) ?></td>
@@ -93,13 +93,13 @@ $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <td><?= htmlspecialchars($student['phone']) ?></td>
                                     <td><?= htmlspecialchars($student['address']) ?></td>
                                     <td>
-                                        <a href="update_student.php?id=<?= $student['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
-                                        <a href="delete_student.php?id=<?= $student['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this student?');">Delete</a>
+                                        <a href="update_student.php?id=<?= $student['id'] ?>" class="btn btn-sm btn-warning">تعديل</a>
+                                        <a href="delete_student.php?id=<?= $student['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('هل انت متأكد من انك تريد حذف هذا الطالب؟');">حذف</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <tr><td colspan="6" class="text-center py-4">No students found.</td></tr>
+                            <tr><td colspan="6" class="text-center py-4">لا يوجد طلاب.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -111,7 +111,7 @@ $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <nav class="mt-4">
                 <ul class="pagination justify-content-center">
                     <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?page=<?= $page - 1 ?>&search=<?= htmlspecialchars($search) ?>">Previous</a>
+                        <a class="page-link" href="?page=<?= $page - 1 ?>&search=<?= htmlspecialchars($search) ?>">السابق</a>
                     </li>
                     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                         <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
@@ -119,7 +119,7 @@ $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </li>
                     <?php endfor; ?>
                     <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?page=<?= $page + 1 ?>&search=<?= htmlspecialchars($search) ?>">Next</a>
+                        <a class="page-link" href="?page=<?= $page + 1 ?>&search=<?= htmlspecialchars($search) ?>">الاحق</a>
                     </li>
                 </ul>
             </nav>
