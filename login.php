@@ -3,7 +3,7 @@ session_start();
 
 // Handle form submission logic in the same file
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login_identifier'])) {
-    require_once __DIR__ . '/php/auth/db.php';
+    require_once '/php/auth/db.php';
     
     $identifier = trim($_POST['login_identifier']);
     $password = $_POST['password'];
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login_identifier'])) {
         header("Location: /php/student management/view_students.php");
         exit();
     } else {
-        $_SESSION['error'] = "Invalid username/email or password.";
+        $_SESSION['error'] = " اسم مستخدم/بريد الكتروني او كلمة مرور غير صالح.";
         header("Location: /login.php");
         exit();
     }
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login_identifier'])) {
             <div class="col-md-5">
                 <div class="card shadow-sm border-0">
                     <div class="card-body p-4">
-                        <h3 class="text-center mb-4 fw-bold">Sign In</h3>
+                        <h3 class="text-center mb-4 fw-bold">تسجيل دخول</h3>
                         
                         <!-- Display Error Message if login failed -->
                         <?php if (isset($_SESSION['error'])): ?>
@@ -51,18 +51,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login_identifier'])) {
 
                         <form action="login.php" method="POST">
                             <div class="mb-3">
-                                <label for="login_identifier" class="form-label">Username or Email</label>
+                                <label for="login_identifier" class="form-label">البريد الالكتروني او اسم المستخدم</label>
                                 <input type="text" class="form-control" id="login_identifier" name="login_identifier" required>
                             </div>
                             <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
+                                <label for="password" class="form-label">كلمة المرور</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100 py-2">Login</button>
+                            <button type="submit" class="btn btn-primary w-100 py-2">يسجل</button>
                         </form>
                         
                         <div class="text-center mt-3">
-                            <small class="text-muted">Don't have an account? <a href="registration.php">Register here</a></small>
+                            <small class="text-muted">ألا تملك حساب؟<a href="registration.php">سجل الان</a></small>
                         </div>
                     </div>
                 </div>
