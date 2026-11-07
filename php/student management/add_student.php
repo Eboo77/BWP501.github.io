@@ -25,13 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Validating mandatory fields
     if (empty($name) || empty($email)) {
-        $message = "Name and Email are required fields.";
+        $message = "الاسم والبريد الالكتروني حقول مطلوبة.";
     } else {
         //checking for student data befor inserting
         $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM students WHERE email = ? OR name = ? OR phone = ?");
         $checkStmt->execute([$email, $name, $phone]);
         if ($checkStmt->fetchColumn() > 0) {
-            $message = "A student with this name or email or phone already exists!";
+            $message = "هذا الطالب او البريد الاكتروني او رقم الهاتف موجود من قبل .جرب اخرى!";
         } else {
             // Processing the image upload, if present
             if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $maxSize = 1 * 1024 * 1024; 
 
                 if ($fileSize > $maxSize) {
-                    $message = "Image size must not exceed 1MB.";
+                    $message = "يجب ألا تتجاوز مساحة الصورة 1MB.";
                     } else { 
                     $tmpFilePath = $_FILES['profile_picture']['tmp_name'];
                     $fileExtension = strtolower(pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION));
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $checkImageStmt->execute(["%$fileName%"]);
 
                     if ($checkImageStmt->fetchColumn() > 0) {
-                        $message = "This image has already been uploaded and is being used in the system by another student!";
+                        $message = "هذة الصورة بالفعل موجودة من قبل .جرب صورة اخرى!";
                     } else {
                     $fileData = file_get_contents($tmpFilePath);
                     $fileType = $_FILES['profile_picture']['type'];
@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add Student</title>
+    <title>اضافة طالب جديد</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
@@ -118,37 +118,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card shadow sm border-0 p-4">
-                    <h3 class="mb-3 text-center">Add New Student</h3>
+                    <h3 class="mb-3 text-center">اضافة طالب جديد</h3>
                     <?php if (!empty($message)): ?>
                         <div class="alert alert-danger"><?= htmlspecialchars($message) ?></div>
                     <?php endif; ?>
 
                     <form id="studentForm" action="add_student.php" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <label class="form-label">Full Name</label>
+                            <label class="form-label">الاسم الكامل</label>
                             <input type="text" class="form-control" name="name" id="name" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Email Address</label>
+                            <label class="form-label">البريد الالكتروني</label>
                             <input type="email" class="form-control" name="email" id="email" required>
                             <div id="emailfeedback" class="text-danger small"></div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Phone Number</label>
+                            <label class="form-label">رقم الهاتف</label>
                             <input type="text" class="form-control" name="phone">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Address</label>
+                            <label class="form-label">العنوان</label>
                             <textarea class="form-control" name="address" rows="2"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Profile Picture (Optional)</label>
+                            <label class="form-label">الصور الشخصية (اختياري)</label>
                             <input type="file" class="form-control" name="profile_picture" accept="image/*">
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Add Student</button>
+                        <button type="submit" class="btn btn-primary w-100">اضافة طالب</button>
                     </form>
                     <div class="text-center mt-3">
-                        <a href="view_students.php">Back to Student List</a>
+                        <a href="view_students.php"> العودة الى قائمة الطلاب</a>
                     </div>
                 </div>
             </div>
@@ -162,10 +162,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
             if (!name || !email) {
-                alert('Please fill out all required fields.');
+                alert('الرجاء ملئ جميع الحقول المطلوبة.');
                 e.preventDefault();
             } else if (!emailRegex.test(email)) {
-                document.getElementById('emailfeedback').innerText = 'Please enter a valid email address.';
+                document.getElementById('emailfeedback').innerText = 'الرجاء ادخال بريد الكتروني صالح.';
                 e.preventDefault();
             }
         });
