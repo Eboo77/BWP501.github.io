@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM students WHERE email = ? OR name = ? OR phone = ?");
         $checkStmt->execute([$email, $name, $phone]);
         if ($checkStmt->fetchColumn() > 0) {
-            $message = "هذا الطالب او البريد الاكتروني او رقم الهاتف موجود من قبل .جرب اخرى!";
+            $message = "هذا الطالب او البريد الاكتروني او رقم الهاتف موجود من قبل .جرب مرة اخرى!";
         } else {
             // Processing the image upload, if present
             if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
@@ -93,8 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }    
                 }
             }
-        }
-        // Entering data into the database
+           // Entering data into the database
                 if (empty($message)) {
                     $stmt = $pdo->prepare("INSERT INTO students (name, email, phone, address, profile_picture) VALUES (?, ?, ?, ?, ?)");
                     $stmt->execute([$name, $email, $phone, $address, $profile_picture_url]);
@@ -102,6 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
                     header("Location: view_students.php");
                     exit();
+            } 
         }
     }
 }
