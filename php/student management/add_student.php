@@ -92,7 +92,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         }
                     }    
                 }
-                // Entering data into the database
+            }
+        }
+        // Entering data into the database
                 if (empty($message)) {
                     $stmt = $pdo->prepare("INSERT INTO students (name, email, phone, address, profile_picture) VALUES (?, ?, ?, ?, ?)");
                     $stmt->execute([$name, $email, $phone, $address, $profile_picture_url]);
@@ -100,8 +102,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
                     header("Location: view_students.php");
                     exit();
-                }
-            }
         }
     }
 }
