@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     //  The Supabase secret key is used here to bypass RLS restrictions.
     $supabase_key = $_ENV['SUPABASE_KEY'];
     $bucketName = 'uploads'; // Bucket name in Supabase
-     $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM students WHERE email = ? OR name = ? OR phone = ? OR profile_picture = ?");
+     $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM students WHERE email = ? AND name = ? AND phone = ? AND profile_picture = ?");
         $checkStmt->execute([$email, $name, $phone, $profile_picture_url]);
         if ($checkStmt->fetchColumn() > 0) {
             $message = "هناك طالب بالفعل مع نفس الاسم او البريد الالكتروني او رقم الهاتف. جرب مرة اخرى!";
